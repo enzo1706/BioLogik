@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    "baseUrl": ".",
+    "paths": {
+      "@biologik/ui": ["packages/ui/src"],
+      "@biologik/ui/*": ["packages/ui/src/*"],
+      "@biologik/design-tokens": ["packages/design-tokens/src"],
+      "@biologik/design-tokens/*": ["packages/design-tokens/src/*"],
+      "@biologik/types": ["packages/types/src"],
+      "@biologik/types/*": ["packages/types/src/*"],
+      "@biologik/auth": ["packages/auth/src"],
+      "@biologik/auth/*": ["packages/auth/src/*"],
+      "@biologik/api-client": ["packages/api-client/src"],
+      "@biologik/api-client/*": ["packages/api-client/src/*"],
+      "@biologik/config": ["packages/config/src"],
+      "@biologik/config/*": ["packages/config/src/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", ".vite"]
+}

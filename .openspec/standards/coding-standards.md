@@ -1,0 +1,6 @@
+- usar TypeScript estricto
+- evitar any
+- componentes reutilizables
+- funciones pequeñas
+- evitar lógica duplicada
+- mantener clean architecture
