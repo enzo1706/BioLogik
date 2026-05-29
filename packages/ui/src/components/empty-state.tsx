@@ -24,7 +24,7 @@ export interface EmptyStateProps {
 
 // ── Icons map ───────────────────────────────────────────────
 
-const DefaultIcons = {
+const DefaultIcons: Record<string, typeof Inbox> = {
   empty: Inbox,
   search: SearchX,
   error: AlertCircle,

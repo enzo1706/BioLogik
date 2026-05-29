@@ -1,5 +1,6 @@
 import { forwardRef, type ButtonHTMLAttributes } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Slot } from '@radix-ui/react-slot';
 import { cn } from '../lib/cn';
 import { Loader2 } from 'lucide-react';
 
@@ -45,14 +46,18 @@ export interface ButtonProps
   extends ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   loading?: boolean;
+  /** Si es true, el botón renderiza su children como el elemento DOM
+   *  (útil para Links de react-router). Ver @radix-ui/react-slot. */
+  asChild?: boolean;
 }
 
 // ── Component ───────────────────────────────────────────────
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, fullWidth, loading, disabled, children, ...props }, ref) => {
+  ({ className, variant, size, fullWidth, loading, disabled, children, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : 'button';
     return (
-      <button
+      <Comp
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         disabled={disabled || loading}
@@ -60,7 +65,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         {children}
-      </button>
+      </Comp>
     );
   },
 );

@@ -1,9 +1,16 @@
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ROUTES } from '@/lib/constants';
 import { RootLayout } from '@/layouts/root-layout';
 import { AuthLayout } from '@/layouts/auth-layout';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
 import { ProtectedRoute } from '@biologik/auth';
+import { LoadingState } from '@biologik/ui';
+
+// Lazy-loaded landing page
+const LandingPage = lazy(() =>
+  import('@/features/landing').then((m) => ({ default: m.LandingPage })),
+);
 
 // Lazy-loaded page placeholders
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -16,12 +23,20 @@ const PlaceholderPage = ({ title }: { title: string }) => (
 );
 
 export const router = createBrowserRouter([
+  // Landing page — standalone, with own header/footer
   {
-    path: ROUTES.HOME,
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingState message="Cargando..." />}>
+        <LandingPage />
+      </Suspense>
+    ),
+  },
+  // App pages with standard layout
+  {
     element: <RootLayout />,
     children: [
-      // Public routes
-      { index: true, element: <PlaceholderPage title="BioLogik — Landing" /> },
+      // Public auth routes
       {
         element: <AuthLayout />,
         children: [

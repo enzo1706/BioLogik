@@ -5,6 +5,11 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem; /* offset for fixed header */
+  }
+
   :root {
     --background: 37 23% 94%;
     --foreground: 224 71% 4%;
@@ -66,5 +71,11 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
 }
