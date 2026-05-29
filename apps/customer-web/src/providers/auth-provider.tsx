@@ -3,14 +3,27 @@ import {
   useContext,
   useCallback,
   useState,
+  useEffect,
   type ReactNode,
 } from 'react';
-import type { Role } from '@biologik/types';
+import {
+  useAuth as useAuthHook,
+  useRole as useRoleHook,
+  usePermission as usePermissionHook,
+  getAuthClient,
+  type Role,
+  type LoginCredentials,
+  type RegisterCredentials,
+  type Permission,
+} from '@biologik/auth';
+import { getApiClient } from '@biologik/api-client';
+
+// ── Context Types ──────────────────────────────────────────
 
 interface User {
   id: string;
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   role: Role;
 }
 
@@ -18,47 +31,103 @@ interface AuthContextState {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  error: string | null;
+
+  // Actions
+  login: (credentials: LoginCredentials) => Promise<void>;
+  register: (credentials: RegisterCredentials) => Promise<void>;
   logout: () => void;
+
+  // Role checks
+  hasRole: (...roles: Role[]) => boolean;
+  isAdmin: boolean;
+  isStaff: boolean;
+
+  // Permission checks
+  hasPermission: (permission: Permission) => boolean;
+  hasAllPermissions: (...permissions: Permission[]) => boolean;
 }
+
+// ── Context ────────────────────────────────────────────────
 
 const AuthContext = createContext<AuthContextState | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+// ── Provider ───────────────────────────────────────────────
 
-  const login = useCallback(async (_email: string, _password: string) => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement real authentication
-      // const response = await api.auth.login(email, password);
-      // setUser(response.user);
-      throw new Error('Auth not implemented yet');
-    } finally {
-      setIsLoading(false);
+interface AuthProviderProps {
+  children: ReactNode;
+  /** Backend API URL. Defaults to http://localhost:8000/api/v1 */
+  apiUrl?: string;
+}
+
+export function AuthProvider({ children, apiUrl }: AuthProviderProps) {
+  // Initialize AuthClient and ApiClient with the provided URL
+  useEffect(() => {
+    if (apiUrl) {
+      getAuthClient({ apiUrl });
+      getApiClient({ apiUrl });
     }
-  }, []);
+  }, [apiUrl]);
 
-  const logout = useCallback(() => {
-    setUser(null);
-    // TODO: Clear tokens, redirect to login
-  }, []);
+  // Use the auth hooks from @biologik/auth
+  const auth = useAuthHook();
+  const role = useRoleHook();
+  const permission = usePermissionHook();
+
+  // Enrich user with profile data if available
+  const [enrichedUser, setEnrichedUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (auth.user && auth.isAuthenticated) {
+      // Try to fetch full profile, but don't block on it
+      const api = getApiClient();
+      api
+        .get<{
+          id: string;
+          name: string;
+          email: string;
+          role: Role;
+        }>('/auth/me')
+        .then((profile) => {
+          setEnrichedUser({
+            id: profile.id,
+            name: profile.name,
+            email: profile.email,
+            role: profile.role,
+          });
+        })
+        .catch(() => {
+          // If /me fails, use the basic user from JWT
+          setEnrichedUser(auth.user);
+        });
+    } else {
+      setEnrichedUser(null);
+    }
+  }, [auth.user, auth.isAuthenticated]);
+
+  const value: AuthContextState = {
+    user: enrichedUser ?? auth.user,
+    isAuthenticated: auth.isAuthenticated,
+    isLoading: auth.isLoading,
+    error: auth.error,
+    login: auth.login,
+    register: auth.register,
+    logout: auth.logout,
+    hasRole: role.hasRole,
+    isAdmin: role.isAdmin,
+    isStaff: role.isStaff,
+    hasPermission: permission.hasPermission,
+    hasAllPermissions: permission.hasAllPermissions,
+  };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated: !!user,
-        isLoading,
-        login,
-        logout,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
 }
+
+// ── Hook ───────────────────────────────────────────────────
 
 export function useAuth(): AuthContextState {
   const context = useContext(AuthContext);
@@ -67,3 +136,6 @@ export function useAuth(): AuthContextState {
   }
   return context;
 }
+
+// ── Re-export types ────────────────────────────────────────
+export type { LoginCredentials, RegisterCredentials, Role, Permission };

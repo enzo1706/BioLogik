@@ -3,6 +3,7 @@ import { ROUTES } from '@/lib/constants';
 import { RootLayout } from '@/layouts/root-layout';
 import { AuthLayout } from '@/layouts/auth-layout';
 import { DashboardLayout } from '@/layouts/dashboard-layout';
+import { ProtectedRoute } from '@biologik/auth';
 
 // Lazy-loaded page placeholders
 const PlaceholderPage = ({ title }: { title: string }) => (
@@ -38,9 +39,13 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // Authenticated routes
+      // Authenticated routes — protected with ProtectedRoute
       {
-        element: <DashboardLayout />,
+        element: (
+          <ProtectedRoute redirectTo={ROUTES.LOGIN}>
+            <DashboardLayout />
+          </ProtectedRoute>
+        ),
         children: [
           {
             path: ROUTES.DASHBOARD,

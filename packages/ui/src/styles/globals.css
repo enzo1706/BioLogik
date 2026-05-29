@@ -1,3 +1,13 @@
+/* ─────────────────────────────────────────────────────────────
+ * BioLogik Design System — Global Styles
+ *
+ * Import this file in your app's entry point to get:
+ *   - Inter font (Google Fonts)
+ *   - Tailwind base/components/utilities
+ *   - CSS custom properties for shadcn/ui-style theming
+ *   - Dark mode support via .dark class
+ * ─────────────────────────────────────────────────────────── */
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
@@ -5,7 +15,105 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --background: 37 23% 94%;
+    --foreground: 224 71% 4%;
+    --card: 0 0% 100%;
+    --card-foreground: 224 71% 4%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 71% 4%;
+    --primary: 73 56% 70%;
+    --primary-foreground: 0 0% 15%;
+    --secondary: 197 29% 27%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 37 20% 90%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 73 56% 70%;
+    --accent-foreground: 0 0% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 122 39% 49%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 100% 50%;
+    --warning-foreground: 0 0% 15%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 73 56% 70%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 224 71% 4%;
+    --foreground: 37 23% 94%;
+    --card: 224 71% 4%;
+    --card-foreground: 37 23% 94%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 37 23% 94%;
+    --primary: 73 56% 70%;
+    --primary-foreground: 224 71% 4%;
+    --secondary: 197 29% 27%;
+    --secondary-foreground: 37 23% 94%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 73 56% 70%;
+    --accent-foreground: 224 71% 4%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 37 23% 94%;
+    --success: 122 39% 49%;
+    --success-foreground: 0 0% 98%;
+    --warning: 38 100% 50%;
+    --warning-foreground: 0 0% 15%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 73 56% 70%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
   body {
-    @apply bg-background text-neutral-800 font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: 'salt' 1, 'cv02' 1, 'cv03' 1, 'cv04' 1;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-muted-foreground/20 hover:bg-muted-foreground/30 transition-colors;
+  }
+}
+
+@layer components {
+  /* Utility component classes */
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-md hover:-translate-y-0.5;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
   }
 }

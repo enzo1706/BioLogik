@@ -16,9 +16,15 @@
     "clean": "rm -rf dist .turbo"
   },
   "dependencies": {
-    "@biologik/types": "workspace:*"
+    "@biologik/types": "workspace:*",
+    "@biologik/auth": "workspace:*",
+    "@tanstack/react-query": "^5.0.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "react": "^19.0.0",
     "typescript": "^5.7.0"
   }
 }
