@@ -86,7 +86,6 @@ export class ApiClient {
 
     let response = await this.fetchFn(url, {
       method,
-      headers,
       body: data ? JSON.stringify(data) : undefined,
       ...options,
       headers, // Ensure headers override any from options

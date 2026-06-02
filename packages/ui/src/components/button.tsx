@@ -55,9 +55,23 @@ export interface ButtonProps
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, fullWidth, loading, disabled, children, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
+    // When asChild is true, delegate to Slot which renders a SINGLE child element.
+    // Slot cannot have siblings (like a loading spinner), so we skip Loader2.
+    // Disabled state is handled via CSS classes (disabled:pointer-events-none).
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, fullWidth, className }))}
+          ref={ref}
+          {...(props as Record<string, unknown>)}
+        >
+          {children}
+        </Slot>
+      );
+    }
+
     return (
-      <Comp
+      <button
         className={cn(buttonVariants({ variant, size, fullWidth, className }))}
         ref={ref}
         disabled={disabled || loading}
@@ -65,7 +79,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {loading && <Loader2 className="h-4 w-4 animate-spin" />}
         {children}
-      </Comp>
+      </button>
     );
   },
 );

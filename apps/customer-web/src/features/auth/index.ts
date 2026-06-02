@@ -1,2 +1,2 @@
-// Auth Feature — BioLogik Customer
-// TODO: LoginForm, RegisterForm, ForgotPasswordForm
+export { LoginPage } from './pages/login-page';
+export { RegisterPage } from './pages/register-page';

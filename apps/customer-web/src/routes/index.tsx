@@ -12,6 +12,14 @@ const LandingPage = lazy(() =>
   import('@/features/landing').then((m) => ({ default: m.LandingPage })),
 );
 
+// Lazy-loaded auth pages
+const LoginPage = lazy(() =>
+  import('@/features/auth').then((m) => ({ default: m.LoginPage })),
+);
+const RegisterPage = lazy(() =>
+  import('@/features/auth').then((m) => ({ default: m.RegisterPage })),
+);
+
 // Lazy-loaded page placeholders
 const PlaceholderPage = ({ title }: { title: string }) => (
   <div className="flex min-h-[60vh] items-center justify-center">
@@ -42,11 +50,19 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ROUTES.LOGIN,
-            element: <PlaceholderPage title="Iniciar Sesión" />,
+            element: (
+              <Suspense fallback={<LoadingState message="Cargando..." />}>
+                <LoginPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.REGISTER,
-            element: <PlaceholderPage title="Crear Cuenta" />,
+            element: (
+              <Suspense fallback={<LoadingState message="Cargando..." />}>
+                <RegisterPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.FORGOT_PASSWORD,

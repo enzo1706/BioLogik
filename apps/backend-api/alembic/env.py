@@ -14,6 +14,7 @@ if config.config_file_name is not None:
 
 # ── Import all models so Alembic can detect ──────────────────
 from app.core.database import Base  # noqa: E402
+from app.core.config import settings  # noqa: E402
 from app.models import *  # noqa: E402, F401, F403 — loads all models into Base.metadata
 
 target_metadata = Base.metadata
@@ -21,7 +22,7 @@ target_metadata = Base.metadata
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode (emit SQL without connecting)."""
-    url = config.get_main_option("sqlalchemy.url")
+    url = settings.database_url
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -33,9 +34,15 @@ def run_migrations_offline() -> None:
 
 
 def run_migrations_online() -> None:
-    """Run migrations in 'online' mode (connect to the live database)."""
+    """Run migrations in 'online' mode (connect to the live database).
+
+    Uses the database URL from app.core.config.settings so that
+    the ``DATABASE_URL`` env var (or ``.env`` file) is respected.
+    """
+    cfg = config.get_section(config.config_ini_section, {})
+    cfg["sqlalchemy.url"] = settings.database_url
     connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
+        cfg,
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )

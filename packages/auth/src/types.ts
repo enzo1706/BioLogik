@@ -44,5 +44,11 @@ export interface AuthError {
   detail: string;
 }
 
+// Bring Role into scope for type definitions above
+import type { Role } from '@biologik/types';
+
 // Re-export Role from @biologik/types for convenience
-export type { Role } from '@biologik/types';
+export type { Role };
+
+// Re-export Permission from rbac for convenience
+export type { Permission } from './rbac';

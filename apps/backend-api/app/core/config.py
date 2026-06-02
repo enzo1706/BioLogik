@@ -7,6 +7,11 @@ class Settings(BaseSettings):
     """Application settings loaded from environment variables.
 
     Values are read from a ``.env`` file (if present) and from the environment.
+
+    .. note::
+       ``cors_origins`` is a ``list[str]``. When setting via ``.env`` file use
+       **JSON array syntax**:
+       ``CORS_ORIGINS=["http://localhost:3001","http://localhost:3002"]``
     """
 
     # ── General ──────────────────────────────────────────────

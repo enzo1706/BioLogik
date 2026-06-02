@@ -5,7 +5,7 @@
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getApiClient, ApiError } from './client';
+import { getApiClient } from './client';
 import type { Role } from '@biologik/types';
 
 // ── Query Keys ─────────────────────────────────────────────

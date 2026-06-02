@@ -1,6 +1,7 @@
 """Appointment model — nutritionist-patient meetings."""
 
 import uuid
+from datetime import datetime
 
 from sqlalchemy import DateTime, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID

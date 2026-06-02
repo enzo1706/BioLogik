@@ -68,7 +68,8 @@ export function decodeJwtPayload(token: string): TokenPayload | null {
     const parts = token.split('.');
     if (parts.length !== 3) return null;
 
-    const payload = JSON.parse(atob(parts[1]));
+    // parts[1] is guaranteed by the length check above, but TS doesn't narrow it
+    const payload = JSON.parse(atob(parts[1] as string));
     return payload as TokenPayload;
   } catch {
     return null;
