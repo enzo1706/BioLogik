@@ -223,11 +223,14 @@ interface UseRoleReturn {
 
 /**
  * Hook for role-based checks.
+ *
+ * If `user` is provided, it uses that user directly (single source of truth).
+ * Otherwise falls back to reading from token storage via `useAuthState()`.
  */
-export function useRole(): UseRoleReturn {
-  const { user } = useAuthState();
+export function useRole(user?: AuthUser | null): UseRoleReturn {
+  const authUser = user ?? useAuthState().user;
 
-  const role = user?.role ?? null;
+  const role = authUser?.role ?? null;
 
   return useMemo(
     () => ({
@@ -251,10 +254,13 @@ interface UsePermissionReturn {
 
 /**
  * Hook for permission-based checks.
+ *
+ * If `user` is provided, it uses that user directly (single source of truth).
+ * Otherwise falls back to reading from token storage via `useAuthState()`.
  */
-export function usePermission(): UsePermissionReturn {
-  const { user } = useAuthState();
-  const role = user?.role ?? null;
+export function usePermission(user?: AuthUser | null): UsePermissionReturn {
+  const authUser = user ?? useAuthState().user;
+  const role = authUser?.role ?? null;
 
   return useMemo(
     () => ({

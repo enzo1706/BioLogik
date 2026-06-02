@@ -69,9 +69,10 @@ export function AuthProvider({ children, apiUrl }: AuthProviderProps) {
   }, [apiUrl]);
 
   // Use the auth hooks from @biologik/auth
+  // Pass auth.user as single source of truth for role & permission checks
   const auth = useAuthHook();
-  const role = useRoleHook();
-  const permission = usePermissionHook();
+  const role = useRoleHook(auth.user);
+  const permission = usePermissionHook(auth.user);
 
   // Enrich user with profile data if available
   const [enrichedUser, setEnrichedUser] = useState<User | null>(null);

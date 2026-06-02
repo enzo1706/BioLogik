@@ -12,9 +12,24 @@ const LandingPage = lazy(() =>
   import('@/features/landing').then((m) => ({ default: m.LandingPage })),
 );
 
+// Lazy-loaded dashboard page
+const DashboardPage = lazy(() =>
+  import('@/features/dashboard').then((m) => ({ default: m.DashboardPage })),
+);
+
 // Lazy-loaded auth pages
 const LoginPage = lazy(() =>
   import('@/features/auth').then((m) => ({ default: m.LoginPage })),
+);
+
+// Lazy-loaded profile page
+const ProfilePage = lazy(() =>
+  import('@/features/profile').then((m) => ({ default: m.ProfilePage })),
+);
+
+// Lazy-loaded subscription page
+const SubscriptionPage = lazy(() =>
+  import('@/features/subscription').then((m) => ({ default: m.SubscriptionPage })),
 );
 const RegisterPage = lazy(() =>
   import('@/features/auth').then((m) => ({ default: m.RegisterPage })),
@@ -80,7 +95,11 @@ export const router = createBrowserRouter([
         children: [
           {
             path: ROUTES.DASHBOARD,
-            element: <PlaceholderPage title="Dashboard" />,
+            element: (
+              <Suspense fallback={<LoadingState message="Cargando dashboard..." />}>
+                <DashboardPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.MEALS,
@@ -104,11 +123,19 @@ export const router = createBrowserRouter([
           },
           {
             path: ROUTES.PROFILE,
-            element: <PlaceholderPage title="Mi Perfil" />,
+            element: (
+              <Suspense fallback={<LoadingState message="Cargando perfil..." />}>
+                <ProfilePage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.SUBSCRIPTION,
-            element: <PlaceholderPage title="Mi Suscripción" />,
+            element: (
+              <Suspense fallback={<LoadingState message="Cargando suscripción..." />}>
+                <SubscriptionPage />
+              </Suspense>
+            ),
           },
           {
             path: ROUTES.NUTRITIONIST,
